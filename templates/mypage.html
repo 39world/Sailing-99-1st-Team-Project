@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <title>스파르타코딩클럽 | 나홀로일기장</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
+
+
+    <style>
+        * {
+            font-family: 'Noto Serif KR', serif;
+            color: #68665f;
+        }
+        
+        .posting-box {
+            width: 500px;
+            margin-top: 20px;
+            display: block;
+        }
+        
+        .container {
+            padding-left: 50px;
+        }
+        
+        .posting-box>.custom-file {
+            margin-bottom: 20px;
+        }
+        
+        .jumbotron {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        
+        .cards-box {
+            width: 300px;
+        }
+        
+        body {
+            background-color: rgb(253, 253, 252);
+        }
+        
+        .title {
+            display: block;
+            width: 100px;
+            margin: auto;
+        }
+        
+        #wrap {
+            height: 100vh;
+        }
+        
+        #header {
+            text-align: center;
+            padding: 20px;
+            height: 10vh;
+            min-height: 50px;
+        }
+        
+        #container {
+            height: 10vh;
+        }
+        
+        #aside {
+            float: left;
+            width: 15%;
+            height: 100%;
+            border-right: rgb(202, 202, 202) solid 1px;
+            text-decoration: none;
+        }
+        
+        #contents {
+            float: left;
+            width: 85%;
+            height: 100%;
+        }
+        
+        .exhibits-link {
+            width: 400px;
+            margin: 150px auto;
+            display: block;
+        }
+        
+        img {
+            width: 400px;
+            object-fit: cover;
+        }
+        
+        .nav-link {
+            color: #68665f;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            bsCustomFileInput.init()
+            listing()
+        })
+
+        function open_close() {
+            if ($('#review-box').css('display') == 'block') {
+                $('#review-box').hide();
+                $('#recordopen').text('기록 하기');
+            } else {
+                $('#review-box').show();
+                $('#recordopen').text('닫기');
+            }
+
+        }
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/mypage/diary",
+                data: {},
+                success: function(response) {
+                    let diaries = response['all_diary']
+                    for (let i = 0; i < diaries.length; i++) {
+                        let title = diaries[i]['title'];
+                        let content = diaries[i]['content'];
+                        let file = diaries[i]['file'];
+
+                        let temp_html = `<div class="card" >
+                                             <img class="card-img-top" src="../static/${file}"  alt="Card image cap">
+                                             <div class="card-body">
+                                             <h5 class="card-title">${title}</h5>
+                                             <p class="card-text">${content}</p>
+                                            </div>
+                                         </div>`;
+                        $('#cards-box').append(temp_html);
+
+                    }
+                }
+            })
+        }
+
+
+        function posting() {
+            let title = $('#title').val()
+            let content = $("#content").val()
+
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+
+            console.log(form_data.append("file_give", file))
+            console.log(form_data)
+            form_data.append("title_give", title)
+            form_data.append("content_give", content)
+
+            $.ajax({
+                type: "POST",
+                url: "/mypage/diary",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <div id="wrap">
+        <!-- 헤더 -->
+        <div id="header">
+            <a class="title" href="/index" style="text-decoration: none;">
+                <h1>오 전</h1>
+            </a>
+        </div>
+        <!-- 내비게이션 -->
+        <div id="container">
+            <div id="aside">
+                <nav class="nav flex-column" style="color: #68665f;">
+                    <br>
+                    <a class="nav-link" href="#" style="font-size: 30px;">오늘의 전시</a>
+                    <br>
+                    <br>
+                    <a class="nav-link active" aria-current="page" href="#">인기 전시</a>
+                    <a class="nav-link" href="#">전시 검색</a>
+                    <a class="nav-link" href="#">종료 임박 전시</a>
+                    <br>
+                    <a class="nav-link" href="/login">로그인</a>
+                    <a class="nav-link" href="/mypage">마이페이지</a>
+                    <a class="nav-link" href="#">로그아웃</a>
+                </nav>
+            </div>
+            <!-- 전시 목록 -->
+            <div id="contents">
+                <div class="wrap">
+                    <div class="jumbotron jumbotron-fluid">
+                        <div class="container">
+                            <h1>다녀온 전시회 <button onclick="open_close()" type="button" class="btn btn-light" id="recordopen">기록 하기</button></h1>
+                            <div class="posting-box" id="review-box" style="display:none">
+
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="file">
+                                    <label class="custom-file-label">전시회 사진 올리기</label>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="email" class="form-control" id="title" placeholder="전시회 이름">
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" id="content" rows="3" placeholder="리뷰 내용 작성"></textarea>
+                                </div>
+                                <button onclick="posting()" type="button" class="btn btn-light">저장하기</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-columns" id="cards-box">
+
+                    </div>
+                </div>
+
+                <div class="wrap">
+                    <div class="jumbotron jumbotron-fluid">
+                        <div class="container">
+                            <h1> 관심있는 전시회 </h1>
+                        </div>
+                        <div class="card-columns" id="cards-box">
+                            <div class="card">
+                                <img class="card-img-top" src="https://movie-phinf.pstatic.net/20210107_160/1609984702837oNdmw_JPEG/movie_image.jpg?type=m77_110_2" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">타이틀</h5>
+                                    <p class="card-text">리뷰</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="card-columns" id="cards-box">
+
+    </div>
+    </div>
+</body>
+
+</html>

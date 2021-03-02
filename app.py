@@ -2,6 +2,8 @@ from pymongo import MongoClient
 import jwt
 import datetime
 import hashlib
+import requests
+from bs4 import BeautifulSoup
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
@@ -27,6 +29,50 @@ def home():
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+        
+@app.route('/')  
+def mypage():
+    return render_template('index.html')
+
+@app.route('/mypage')  #마이페이지 연결 
+def mypage_diary():
+    return render_template('mypage.html')
+
+    
+@app.route('/mypage/diary', methods=['GET'])  #마이페이지 리뷰 보여주기 API
+def show_diary():
+    diaries = list(db.diary.find({}, {'_id':False}))
+    
+    return jsonify({'all_diary': diaries})
+
+@app.route('/mypage/diary', methods=['POST']) #마이페이지 리뷰 작성하기 API
+def save_diary():
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+
+    file = request.files["file_give"]
+    extension = file.filename.split('.')[-1]
+
+    today = datetime.now()
+    mytime = today.strftime('%y-%m-%d-%H-%M-%S')
+
+    filename = f'file-{mytime}'
+
+    save_to = f'static/{filename}.{extension}' 
+   
+    file.save(save_to)
+
+    doc = {
+        'title':title_receive,
+        'content':content_receive,
+        'file': f'{filename}.{extension}'
+    }
+
+    db.diary.insert_one(doc)
+    
+    return jsonify({'msg': '저장 완료!'})
+
 
 
 @app.route('/login')

@@ -7,57 +7,50 @@
     <title>오전, 오늘의 전시</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 
     <style>
         * {
             font-family: 'Noto Serif KR', serif;
             color: #68665f;
         }
-
         /* .nav-link{
             color: #68665f;
             font-size: large;
         } */
-
+        
         body {
             background-color: rgb(253, 253, 252);
         }
-
+        
         .title {
             display: block;
             width: 100px;
             margin: auto;
         }
-
+        
         #wrap {
             height: 100vh;
         }
-
+        
         #header {
-
             text-align: center;
             padding: 20px;
-
             height: 10vh;
             min-height: 50px;
         }
-
+        
         #container {
             height: 90vh;
-
         }
-
+        
         #aside {
             float: left;
             width: 15%;
@@ -65,27 +58,25 @@
             border-right: rgb(202, 202, 202) solid 1px;
             text-decoration: none;
         }
-
+        
         #contents {
             float: left;
-
             width: 85%;
             height: 100%;
         }
-
-        .exhibits-link{
+        
+        .exhibits-link {
             width: 400px;
             margin: 150px auto;
             display: block;
         }
-
+        
         img {
             width: 400px;
             object-fit: cover;
-
         }
-
-        .nav-link{
+        
+        .nav-link {
             color: #68665f;
         }
     </style>
@@ -96,7 +87,9 @@
     <div id="wrap">
         <!-- 헤더 -->
         <div id="header">
-            <a class="title" href="/index" style="text-decoration: none;"><h1>오 전</h1></a>
+            <a class="title" href="/index" style="text-decoration: none;">
+                <h1>오 전</h1>
+            </a>
         </div>
         <!-- 내비게이션 -->
         <div id="container">
@@ -111,7 +104,7 @@
                     <a class="nav-link" href="#">종료 임박 전시</a>
                     <br>
                     <a class="nav-link" href="/login">로그인</a>
-                    <a class="nav-link" href="#">마이페이지</a>
+                    <a class="nav-link" href="/mypage">마이페이지</a>
                     <a class="nav-link" href="#">로그아웃</a>
                 </nav>
             </div>
