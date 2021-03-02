@@ -22,6 +22,7 @@
     <style>
         * {
             font-family: 'Noto Serif KR', serif;
+            color: #68665f;
         }
 
         /* .nav-link{
@@ -29,56 +30,71 @@
             font-size: large;
         } */
 
-        body{
+        body {
             background-color: rgb(253, 253, 252);
         }
 
-        #wrap{
-            background-color: gray;
+        .title {
+            width: 100px;
+            margin: auto;
         }
 
-        #header{
-            background-color: green;
+        #wrap {
+            height: 100vh;
+        }
+
+        #header {
+
             text-align: center;
+            padding: 20px;
 
-            height: 80px;
+            height: 10vh;
+            min-height: 50px;
         }
 
-        #container{
-            
+        #container {
+            height: 90vh;
+
         }
 
-        #aside{
+        #aside {
             float: left;
-            background-color: yellow;
             width: 15%;
+            height: 100%;
+            border-right: rgb(202, 202, 202) solid 1px;
+            text-decoration: none;
         }
 
-        #contents{
+        #contents {
             float: left;
-            background-color: red;
+
             width: 85%;
+            height: 100%;
         }
 
-        #footer{
-            clear: both;
-            background-color:royalblue;
+        .exhibits{
+            width: 400px;
+            margin: 150px auto;
+            display: block;
+        }
+
+        img {
+            width: 400px;
+            object-fit: cover;
+
+        }
+
+        .nav-link{
+            color: #68665f;
         }
     </style>
 
 </head>
 
 <body>
-    <!-- <nav class="nav flex-column">
-        <a class="nav-link active" aria-current="page" href="#">인기 전시</a>
-        <a class="nav-link" href="#">전시 검색</a>
-        <a class="nav-link" href="#">마이페이지</a>
-        <a class="nav-link" href="#">로그인</a>
-        <a class="nav-link" href="#">로그아웃</a>
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-    </nav>
 
-    <div class="card-columns">
+
+    <!-- <div class="card-columns">
         <div class="card">
             <img class="card-img-top" src="..." alt="Card image cap">
             <div class="card-body">
@@ -91,15 +107,33 @@
 
     <div id="wrap">
         <div id="header">
-            <h1>header</h1>
+            <div class="title">
+                <a href="/index" style="text-decoration: none;"><h1>오 전</h1></a>
+            </div>
         </div>
         <div id="container">
-            <div id="aside">aside</div>
-            <div id="contents">contents</div>
+            <div id="aside">
+                <nav class="nav flex-column" style="color: #68665f;">
+                    <br>
+                    <a class="nav-link" href="#" style="font-size: 30px;">오늘의 전시</a>
+                    <br>
+                    <br>
+                    <a class="nav-link active" aria-current="page" href="#">인기 전시</a>
+                    <a class="nav-link" href="#">전시 검색</a>
+                    <a class="nav-link" href="#">종료 임박 전시</a>
+                    <br>
+                    <a class="nav-link" href="/login">로그인</a>
+                    <a class="nav-link" href="#">마이페이지</a>
+                    <a class="nav-link" href="#">로그아웃</a>
+                </nav>
+            </div>
+            <div id="contents">
+                <!-- <div class="exhibits"> -->
+                    <a class="exhibits" href="#"><img src="https://ticketimage.interpark.com/Play/image/large/20/20009147_p.gif" alt="poster_img"></a>
+                <!-- </div> -->
+            </div>
         </div>
-        <div id="footer">
-            <h2>footer</h2>
-        </div>
+    </div>
     </div>
 
 </body>
