@@ -202,6 +202,12 @@ def check_dup():
     return jsonify({'result': 'success', 'exists': exists})
 
 
+# 메인 페이지 상위 15개 전시
+@app.route('/info', methods=['GET'])
+def read_info():
+    all_info = list(db.exhibition.find({}, {'_id': False}))
+    return jsonify({'all_info': all_info})
+
 @app.route('/update_profile', methods=['POST'])
 def save_img():
     token_receive = request.cookies.get('mytoken')
