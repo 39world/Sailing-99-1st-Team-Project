@@ -27,6 +27,15 @@
             color: #68665f;
         }
         
+        .wrap {
+            width: 1200px;
+            margin: auto;
+        }
+        
+        #wrap {
+            height: 100vh;
+        }
+        
         .posting-box {
             width: 500px;
             margin-top: 20px;
@@ -44,10 +53,6 @@
         .jumbotron {
             padding-top: 5px;
             padding-bottom: 5px;
-        }
-        
-        .cards-box {
-            width: 300px;
         }
         
         body {
@@ -72,7 +77,7 @@
         }
         
         #container {
-            height: 10vh;
+            height: 90vh;
         }
         
         #aside {
@@ -95,7 +100,7 @@
             display: block;
         }
         
-        img {
+        #contents .exhibits-link img {
             width: 400px;
             object-fit: cover;
         }
@@ -134,10 +139,11 @@
                         let file = diaries[i]['file'];
 
                         let temp_html = `<div class="card" >
-                                             <img class="card-img-top" src="../static/${file}"  alt="Card image cap">
+                                             <img class="card-img-top" src="../static/${file}" id="card-img" alt="Card image cap">
                                              <div class="card-body">
                                              <h5 class="card-title">${title}</h5>
                                              <p class="card-text">${content}</p>
+                                             <button onclick="delete_diary(${title})" type="button" class="btn btn-light float-right">삭제하기</button>
                                             </div>
                                          </div>`;
                         $('#cards-box').append(temp_html);
@@ -175,6 +181,20 @@
                 }
             })
         }
+
+        function delete_diary(title) {
+            $.ajax({
+                type: 'POST',
+                url: '/mypage/delete',
+                data: {
+                    title_give: title
+                },
+                success: function(response) {
+                    alert(response['msg']);
+                    window.location.reload()
+                }
+            });
+        }
     </script>
 
 </head>
@@ -184,8 +204,9 @@
     <div id="wrap">
         <!-- 헤더 -->
         <div id="header">
-            <a class="title" href="/index" style="text-decoration: none;">
-                <h1>오 전</h1>
+            <a class="title" href="/" style="color:#68665f">
+                <h1>오 전
+                    <h1>
             </a>
         </div>
         <!-- 내비게이션 -->
@@ -193,7 +214,7 @@
             <div id="aside">
                 <nav class="nav flex-column" style="color: #68665f;">
                     <br>
-                    <a class="nav-link" href="#" style="font-size: 30px;">오늘의 전시</a>
+                    <a class="nav-link" href="/" style="font-size: 30px;">오늘의 전시</a>
                     <br>
                     <br>
                     <a class="nav-link active" aria-current="page" href="#">인기 전시</a>
@@ -235,20 +256,21 @@
 
                 <div class="wrap">
                     <div class="jumbotron jumbotron-fluid">
-                        <div class="container">
-                            <h1> 관심있는 전시회 </h1>
-                        </div>
-                        <div class="card-columns" id="cards-box">
-                            <div class="card">
-                                <img class="card-img-top" src="https://movie-phinf.pstatic.net/20210107_160/1609984702837oNdmw_JPEG/movie_image.jpg?type=m77_110_2" alt="Card image cap">
-                                <div class="card-body">
-                                    <h5 class="card-title">타이틀</h5>
-                                    <p class="card-text">리뷰</p>
-                                </div>
+
+                        <h1> 관심있는 전시회 </h1>
+                    </div>
+                    <div class="card-columns" id="cards-box">
+                        <div class="card">
+                            <img class="card-img-top" src="https://movie-phinf.pstatic.net/20200915_134/1600145887443uTV3X_JPEG/movie_image.jpg?type=m427_320_2" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">타이틀</h5>
+                                <p class="card-text">리뷰</p>
+                                <button onclick="delete_diary()" type="button" class="btn btn-light float-right">삭제하기</button>
                             </div>
                         </div>
-
                     </div>
+
+
                 </div>
             </div>
         </div>
