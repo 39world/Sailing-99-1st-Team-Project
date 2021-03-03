@@ -2,11 +2,12 @@ from pymongo import MongoClient
 import jwt
 import datetime
 import hashlib
+import requests
+from bs4 import BeautifulSoup
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
-import requests
+
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -16,7 +17,6 @@ SECRET_KEY = 'SPARTA'
 
 client = MongoClient('localhost', 27017)
 db = client.dbsparta_plus_week4
-
 
 @app.route('/')
 def getMain():
@@ -32,6 +32,56 @@ def getMain():
 #     except jwt.exceptions.DecodeError:
 #         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
+        
+@app.route('/')  
+def mypage():
+    return render_template('index.html')
+
+@app.route('/mypage')  #마이페이지 연결 
+def mypage_diary():
+    return render_template('mypage.html')
+
+    
+@app.route('/mypage/diary', methods=['GET'])  #마이페이지 리뷰 보여주기 API
+def show_diary():
+    diaries = list(db.diary.find({}, {'_id':False}))
+    
+    return jsonify({'all_diary': diaries})
+
+@app.route('/mypage/diary', methods=['POST']) #마이페이지 리뷰 작성하기 API
+def save_diary():
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+
+    file = request.files["file_give"]
+    extension = file.filename.split('.')[-1]
+
+    today = datetime.now()
+    mytime = today.strftime('%y-%m-%d-%H-%M-%S')
+
+    filename = f'file-{mytime}'
+
+    save_to = f'static/{filename}.{extension}' 
+   
+    file.save(save_to)
+
+    doc = {
+        'title':title_receive,
+        'content':content_receive,
+        'file': f'{filename}.{extension}'
+    }
+
+    db.diary.insert_one(doc)
+    
+    return jsonify({'msg': '저장 완료!'})
+
+@app.route('/mypage/delete', methods=['POST']) #리스트 삭제 API
+def delete_star():
+    title_receive = request.form['title_give']
+    db.diary.delete_one({'title': title_receive})
+    return jsonify({'msg': '삭제 완료!'})
+
+
 
 @app.route('/login')
 def login():
@@ -45,8 +95,7 @@ def user(username):
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
-        status = (username == payload["id"])
+        status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
 
         user_info = db.users.find_one({"username": username}, {"_id": False})
         return render_template('user.html', user_info=user_info, status=status)
@@ -61,13 +110,12 @@ def sign_in():
     password_receive = request.form['password_give']
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    result = db.users.find_one(
-        {'username': username_receive, 'password': pw_hash})
+    result = db.users.find_one({'username': username_receive, 'password': pw_hash})
 
     if result is not None:
         payload = {
-            'id': username_receive,
-            'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
+         'id': username_receive,
+         'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -84,14 +132,13 @@ def sign_up():
     password_receive = request.form['password_give']
 
     # PW해시(암호화)
-    password_hash = hashlib.sha256(
-        password_receive.encode('utf-8')).hexdigest()
+    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
         "username": username_receive,                               # 아이디
         "password": password_hash,                                  # 비밀번호
         "profile_name": username_receive,                           # 프로필 이름 기본값은 아이디
         "profile_pic": "",                                          # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
+        "profile_pic_real": "profile_pics/profile_placeholder.png", # 프로필 사진 기본 이미지
         "profile_info": ""                                          # 프로필 한 마디
     }
     # DB 저장
@@ -99,8 +146,6 @@ def sign_up():
     return jsonify({'result': 'success'})
 
 #  ID중복확인
-
-
 @app.route('/sign_up/check_dup', methods=['POST'])
 def check_dup():
     username_receive = request.form['username_give']
