@@ -75,6 +75,12 @@ def save_diary():
     
     return jsonify({'msg': '저장 완료!'})
 
+@app.route('/mypage/delete', methods=['POST']) #리스트 삭제 API
+def delete_star():
+    title_receive = request.form['title_give']
+    db.diary.delete_one({'title': title_receive})
+    return jsonify({'msg': '삭제 완료!'})
+
 
 
 @app.route('/login')
