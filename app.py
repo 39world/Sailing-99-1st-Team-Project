@@ -2,6 +2,8 @@ from pymongo import MongoClient
 import jwt
 import datetime
 import hashlib
+import requests
+from bs4 import BeautifulSoup
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
@@ -16,17 +18,140 @@ SECRET_KEY = 'SPARTA'
 client = MongoClient('localhost', 27017)
 db = client.dbsparta_plus_week4
 
-#랜딩페이지 index.html
 @app.route('/')
 def getMain():
     return render_template('/index.html')
+# def home():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+#         return render_template('index.html')
+#     except jwt.ExpiredSignatureError:
+#         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+#     except jwt.exceptions.DecodeError:
+#         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+        
+@app.route('/')  
+def mypage():
+    return render_template('index.html')
+
+@app.route('/mypage')  #마이페이지 연결 
+def mypage_diary():
+    return render_template('mypage.html')
+
+
+@app.route('/mypage/diary', methods=['GET'])  #마이페이지 리뷰 보여주기 API
+def show_diary():
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])    
+    user_info = db.users.find_one({"username": payload["id"]})["username"]
+    diaries = list(db.diary.find({'username':user_info}, {'_id':False}))   
+    
+    return jsonify({'all_diary': diaries})
+
+@app.route('/mypage/diary', methods=['POST']) #마이페이지 리뷰 작성하기 API
+def save_diary():
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+
+    file = request.files["file_give"]  #파일저장
+    extension = file.filename.split('.')[-1]
+
+    today = datetime.now()
+    mytime = today.strftime('%y-%m-%d-%H-%M-%S')
+
+    filename = f'file-{mytime}'
+
+    save_to = f'static/{filename}.{extension}' 
+   
+    file.save(save_to)
+
+    #id와 같이 저장
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    user_info = db.users.find_one({"username": payload["id"]})["username"]
+    
+    doc = {
+        'username':user_info,
+        'title':title_receive,
+        'content':content_receive,
+        'file': f'{filename}.{extension}'
+    }
+
+    db.diary.insert_one(doc)
+    
+    return jsonify({'msg': '저장 완료!'})
+
+@app.route('/mypage/wannadiary', methods=['GET'])  #찜한 전시회 보여주기 API
+def show_wannadiary():
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])    
+    user_info = db.users.find_one({"username": payload["id"]})["username"] 
+    wannadiaries = list(db.wannadiary.find({'username':user_info}, {'_id':False}))
+    
+    return jsonify({'all_wannadiary': wannadiaries})
+
+@app.route('/show/wannadiary', methods=['POST']) #찜하기 저장 
+def save_wannadiary():
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+    img = request.form['img_give']
+    title_url = request.form['title_url_give']
+
+    #id와 같이 저장
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    user_info = db.users.find_one({"username": payload["id"]})["username"]
+    
+    doc = {
+        'username':user_info,
+        'title':title_receive,
+        'content':content_receive,
+        'img':img,
+        'title_url':title_url
+    }
+
+    db.wannadiary.insert_one(doc)
+    
+    return jsonify({'msg': '저장 완료!'})
+
+    
+@app.route('/mypage/wannadelete', methods=['POST']) #찜리스트 삭제 API
+def delete_wannadiary():
+    title_receive = request.form['title_give']
+    db.wannadiary.delete_one({'title': title_receive})
+    return jsonify({'msg': '삭제 완료!'})
+
+@app.route('/mypage/delete', methods=['POST']) #리뷰리스트 삭제 API
+def delete_diary():
+    title_receive = request.form['title_give']
+    db.diary.delete_one({'title': title_receive})
+    return jsonify({'msg': '삭제 완료!'})
+
 
 
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
-    
+
+
+@app.route('/user/<username>')
+def user(username):
+    # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
+
+        user_info = db.users.find_one({"username": username}, {"_id": False})
+        return render_template('user.html', user_info=user_info, status=status)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
     # 로그인
@@ -76,11 +201,99 @@ def check_dup():
     exists = bool(db.users.find_one({"username": username_receive}))
     return jsonify({'result': 'success', 'exists': exists})
 
-# 메인 페이지 상위 15개 전시
-@app.route('/info', methods=['GET'])
-def read_info():
-    all_info = list(db.exhibition.find({}, {'_id': False}))
-    return jsonify({'all_info': all_info})
+
+@app.route('/update_profile', methods=['POST'])
+def save_img():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # 프로필 업데이트
+        return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+@app.route('/posting', methods=['POST'])
+def posting():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # 포스팅하기
+        return jsonify({"result": "success", 'msg': '포스팅 성공'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+@app.route("/get_posts", methods=['GET'])
+def get_posts():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # 포스팅 목록 받아오기
+        return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다."})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+@app.route('/update_like', methods=['POST'])
+def update_like():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # 좋아요 수 변경
+        return jsonify({"result": "success", 'msg': 'updated'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+
+@app.route('/show')
+def showshow():
+    return render_template('/show.html')
+
+
+# 전시회 데이터
+@app.route('/review', methods=['GET'])
+def read_reviews():
+    shows = list(db.exhibitions.find({}, {'_id': False}))
+    return jsonify({'all_shows': shows})
+
+
+url = "http://ticket.interpark.com/TPGoodsList.asp?Ca=Eve&SubCa=Eve_O&Sort=1"
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+data = requests.get(url, headers=headers)
+
+req = data.text
+soup = BeautifulSoup(req, 'html.parser')
+
+shows = soup.select('div > table > tbody > tr')
+
+for show in shows:
+
+    name = show.select_one('td.RKtxt > span > a')
+    if name is not None:
+        title = name.text
+        location = show.select_one('td:nth-child(3) > a').text
+        location_url = show.select_one('td:nth-child(3) > a')["href"]
+        # get.text()같은 함수 사용했는데도 안됨 ㅜㅜ 그래서 일단 split함수 사용함
+        date = show.select_one('td:nth-child(4)').text
+        title_url = show.select_one('td.RKtxt > span > a')["href"]
+        img = show.select_one('td.RKthumb > a > img')["src"]
+
+        doc = {
+            'title': title,
+            'location': location,
+            'date': date,
+            'img': img,
+            'location_url': location_url,
+            'title_url': title_url
+        }
+        db.exhibitions.insert_one(doc)
+
+
+
+
 
 
 
