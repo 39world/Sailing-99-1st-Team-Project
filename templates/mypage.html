@@ -10,8 +10,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
 
     <!-- Optional JavaScript -->
@@ -22,11 +22,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <title>마이페이지</title>
-
 
     <style>
         * {
@@ -35,8 +34,7 @@
         }
         
         .wrap {
-            width: 80%;
-            margin: auto;
+            width: 80% margin: auto;
         }
         
         #wrap {
@@ -52,7 +50,7 @@
         .cards-box {
             display: flex;
         }
-
+        
         .container {
             padding-left: 50px;
         }
@@ -103,7 +101,6 @@
             float: left;
             width: 85%;
             height: 100%;
-
             overflow: auto;
         }
         
@@ -153,7 +150,7 @@
                                              <div class="card-body">
                                              <h5 class="card-title">${title}</h5>
                                              <p class="card-text">${content}</p>
-                                             <button onclick="delete_diary(${title})" type="button" class="btn btn-light float-right">삭제하기</button>
+                                             <button onclick="delete_diary('${file}')" type="button" class="btn btn-light float-right">삭제하기</button>
                                             </div>
                                          </div>`;
                         $('#cards-box').append(temp_html);
@@ -165,6 +162,7 @@
 
 
         function posting() {
+
             let title = $('#title').val()
             let content = $("#content").val()
 
@@ -182,29 +180,6 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function(response) {
-                    console.log(response);
-                    alert(response["msg"]);
-                    window.location.reload();
-                }
-            })
-        }
-
-        function wannadiaryposting() {
-            let title = $('#title').val()
-            let content = $("#content").val()
-            let img = $('#img').val()
-            let title_url = $('#title_url').val()
-
-            $.ajax({
-                type: "POST",
-                url: "/show/wannadiary",
-                data: {
-                    'title_give': title,
-                    'content_give': content,
-                    'img_give': img,
-                    'title_url_give': title_url
-                },
                 success: function(response) {
                     console.log(response);
                     alert(response["msg"]);
@@ -244,12 +219,12 @@
             })
         }
 
-        function delete_diary(title) {
+        function delete_diary(file) {
             $.ajax({
                 type: 'POST',
                 url: '/mypage/delete',
                 data: {
-                    title_give: title
+                    file_give: file
                 },
                 success: function(response) {
                     alert(response['msg']);
@@ -258,12 +233,12 @@
             });
         }
 
-        function delete_wannadiary(title) {
+        function delete_wannadiary(file) {
             $.ajax({
                 type: 'POST',
                 url: '/mypage/wannadelete',
                 data: {
-                    title_give: title
+                    file_give: file
                 },
                 success: function(response) {
                     alert(response['msg']);
@@ -292,7 +267,9 @@
         }
 
         function sign_out() {
-            $.removeCookie('mytoken', { path: '/' });
+            $.removeCookie('mytoken', {
+                path: '/'
+            });
             alert('로그아웃되었습니다.')
             window.location.href = "/"
         }
@@ -319,7 +296,7 @@
                     <br>
                     <br>
                     <a class="nav-link active" aria-current="page" href="/show">인기 전시</a>
-                    <a class="nav-link" href="#">전시 검색</a>
+                    <a class="nav-link" href="/show">전시 검색</a>
                     <a class="nav-link" href="#">종료 임박 전시</a>
                     <br>
                     <a class="nav-link" href="/login" id="login">로그인</a>
@@ -334,13 +311,14 @@
                     <div class="jumbotron jumbotron-fluid">
                         <div class="container" style="display:flex">
                             <h1 id="visitedexhibit" style="font-size: 25px">다녀온 전시회</h1>
-                            <button style= "max-height: 38px; margin-left: 20px;" onclick='$("#modal-edit").addClass("is-active")' type="button" class="btn btn-light" id="recordopen">기록 하기</button>
+                            <button style="max-height: 38px; margin-left: 20px;" onclick='$("#modal-edit").addClass("is-active")' type="button" class="btn btn-light" id="recordopen">
+                                기록 하기</button>
                         </div>
                     </div>
                     <div class="card-columns" id="cards-box">
-
                     </div>
                 </div>
+
 
                 <div class="wrap" style="margin-top: 15px;">
                     <a href="#visitedexhibit" style="color: #68665f;">다녀온 전시회 바로가기</a>
