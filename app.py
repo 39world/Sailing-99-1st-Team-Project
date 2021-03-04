@@ -186,50 +186,6 @@ def showshow():
     return render_template('/show.html')
 
 
-# 전시회 데이터
-@app.route('/review', methods=['GET'])
-def read_reviews():
-    shows = list(db.exhibitions.find({}, {'_id': False}))
-    return jsonify({'all_shows': shows})
-
-
-url = "http://ticket.interpark.com/TPGoodsList.asp?Ca=Eve&SubCa=Eve_O&Sort=1"
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-data = requests.get(url, headers=headers)
-
-req = data.text
-soup = BeautifulSoup(req, 'html.parser')
-
-shows = soup.select('div > table > tbody > tr')
-
-for show in shows:
-
-    name = show.select_one('td.RKtxt > span > a')
-    if name is not None:
-        title = name.text
-        location = show.select_one('td:nth-child(3) > a').text
-        location_url = show.select_one('td:nth-child(3) > a')["href"]
-        # get.text()같은 함수 사용했는데도 안됨 ㅜㅜ 그래서 일단 split함수 사용함
-        date = show.select_one('td:nth-child(4)').text
-        title_url = show.select_one('td.RKtxt > span > a')["href"]
-        img = show.select_one('td.RKthumb > a > img')["src"]
-
-        doc = {
-            'title': title,
-            'location': location,
-            'date': date,
-            'img': img,
-            'location_url': location_url,
-            'title_url': title_url
-        }
-        db.exhibitions.insert_one(doc)
-
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
