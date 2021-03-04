@@ -75,10 +75,10 @@ def save_diary():
 
 
 @app.route('/show/wannadiary', methods=['POST'])  # 찜한 전시회 보여주기 API
-def find_wannadiary():
-     print(title_give);     
-     title_receive = request.form['title_give']      
-     wannadiaries = list(db.exhibitions.find({'title': title_receive}, {'_id': False}))
+def find_wannadiary():         
+     title_receive = request.form['title_give'].text();
+     print(title_receive);
+     wannadiaries = list(db.exhibition.find({'title': title_receive}, {'_id': False}))     
      return jsonify({'all_wannadiary': wannadiaries})
 
 
