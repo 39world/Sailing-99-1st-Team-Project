@@ -1,76 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Webpage Title -->
     <title>인기 전시</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#reviews-box").html("");
-            //showReview();
-            checking_cookie();
+            checking_cookie()
         });
 
-        function showReview() {
-            $.ajax({
-                type: "GET",
-                url: "/info",
-                data: {},
-                success: function(response) {
-                    let shows = response["all_info"];
-                    for (let i = 0; i < shows.length; i++) {
-                        let title = shows[i]["title"];
-                        let date = shows[i]["date"];
-                        let img = shows[i]["img"];
-                        let title_fix = shows[i]["title_fix"];
-                        let location = shows[i]["location"];
-                        let location_url = shows[i]["location_url"];
-
-                        let temp_html = `<div class="card">
-                                                <img class="card-img-top" src="${img}" alt="Card image cap">
-                                                <div class="card-body">
-                                                    <a href="${title_fix}">${title} </a>
-                                                    <p class="card-text">${date}</p>
-                                                    <a href="${location_url}">${location}</a>
-                                                    
-                                                </div>
-                                            </div>`;
-                        $("#show-cards").append(temp_html);
-                    }
-                }
-            })
-        }
-
         function to_main() {
-            window.location.href = "/";
+            window.location.href = "/"
         }
 
         function sign_out() {
-            $.removeCookie("mytoken", {
-                path: "/"
-            });
-            alert("로그아웃되었습니다.");
-            window.location.href = "/";
+            $.removeCookie('mytoken', { path: '/' });
+            alert('로그아웃되었습니다.')
+            window.location.href = "/"
         }
 
         function checking_cookie() {
@@ -78,126 +44,54 @@
             var cookie = document.cookie;
             // 로그인 상태이면 마이페이지/로그아웃 show, 로그인 hide
             if (cookie != "") {
-                console.log("로그인상태");
+                console.log("로그인상태")
                 $("#mypage").show();
                 $("#logout").show();
                 $("#login").hide();
             }
             //비로그인 상태이면 로그인 show, 마이페이지/로그아웃 hide
             else {
-                console.log("로그인하세요");
+                console.log("로그인하세요")
                 $("#login").show();
                 $("#mypage").hide();
                 $("#logout").hide();
             }
         }
 
-        function wannadiaryposting(title) {
-            $.ajax({
-                type: "POST",
-                url: "/show/wannadiary",
-                data: {
-                    title_give: title
-                },
-                success: function(response) {
-
-                    let wannadiaries = response['wannadiary']
-                    console.log(wannadiaries);
-                    let title = wannadiaries[0]['title'];
-                    let location = wannadiaries[0]['location'];
-                    let date = wannadiaries[0]['date'];
-                    let img = wannadiaries[0]['img'];
-                    let title_url = wannadiaries[0]['title_url'];
-                    console.log(title, location);
-                    // $.ajax({
-                    //     type: "POST",
-                    //     url: "/show/wannadiary",
-                    //     data: {
-                    //         'title_give': title,
-                    //         'date_give': date,
-                    //         'location_give': location,
-                    //         'img_give': img,
-                    //         'title_url_give': title_url
-                    //     },
-                    //     success: function(response) {
-                    //         console.log(response);
-                    //         alert(response["msg"]);
-                    //         window.location.reload();
-                    //     }
-                    // })
-                }
-
-            })
-        }
-
-
-        function wannadiarylisting() {
-            $.ajax({
-                type: "GET",
-                url: "/mypage/wannadiary",
-                data: {},
-                success: function(response) {
-                    let wannadiaries = response['all_wannadiary']
-                    for (let i = 0; i < wannadiaries.length; i++) {
-                        let title = wannadiaries[i]['title'];
-                        let content = wannadiaries[i]['content'];
-                        let img = wannadiaries[i]['img'];
-                        let title_url = wannadiaries[i]['title_url'];
-
-
-                        let temp_html = `<div class="card" >
-                                             <a href="http://www.interpark.com/${title_url}">
-                                             <img class="card-img-top" src="${img}" id="card-img" alt="Card image cap">
-                                             </a>
-                                             <div class="card-body">
-                                             <h5 class="card-title">${title}</h5>
-                                             <p class="card-text">${content}</p>
-                                             <button onclick="delete_wannadiary('${title}'')" type="button" class="btn btn-light float-right">삭제하기</button>
-                                            </div>
-                                         </div>`;
-                        $('#cards-box').append(temp_html);
-
-                    }
-                }
-            })
-        }
     </script>
+
 
     <style>
         * {
-            font-family: "Noto Serif KR", serif;
+            font-family: 'Noto Serif KR', serif;
             color: #68665f;
         }
-        /* .nav-link{
-            color: #68665f;
-            font-size: large;
-        } */
-        
+
         body {
             background-color: rgb(253, 253, 252);
         }
-        
+
         .title {
             display: block;
             width: 100px;
             margin: auto;
         }
-        
+
         #wrap {
             height: 100vh;
         }
-        
+
         #header {
             text-align: center;
             padding: 20px;
             height: 10vh;
             min-height: 50px;
         }
-        
+
         #container {
             height: 90vh;
         }
-        
+
         #aside {
             float: left;
             width: 15%;
@@ -205,35 +99,35 @@
             border-right: rgb(202, 202, 202) solid 1px;
             text-decoration: none;
         }
-        
+
         #contents {
             float: left;
             width: 85%;
             height: 100%;
         }
-        
+
         .exhibits-link {
             width: 400px;
             margin: 150px auto;
             display: block;
         }
-        
+
         #contents .exhibits-link img {
             width: 400px;
             object-fit: cover;
         }
-        
+
         .nav-link {
             color: #68665f;
         }
-        
+
         .card {
-            width: 300px;
-            height: 650px;
+            width: 20%;
+            min-width: 200px;
             display: inline-block;
             margin: 20px;
         }
-        
+
         .card-columns {
             width: 100%;
             left: 18%;
@@ -241,62 +135,65 @@
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+
             justify-content: space-evenly;
             align-items: baseline;
         }
-
-    
     </style>
+
 </head>
 
 <body>
     <div id="wrap">
         <!-- 헤더 -->
         <div id="header">
-            <a class="title" href="/" style="text-decoration: none">
+            <a class="title" href="/" style="text-decoration: none;">
                 <h1>오 전</h1>
             </a>
         </div>
         <!-- 내비게이션 -->
         <div id="container">
             <div id="aside">
-                <nav class="nav flex-column" style="color: #68665f">
-                    <br />
-                    <a class="nav-link" href="/" style="font-size: 30px">오늘의 전시</a>
-                    <br />
-                    <br />
-                    <a class="nav-link active" aria-current="page" href="/show">인기 전시</a
-            >
-            <a class="nav-link" href="#">전시 검색</a>
-                    <a class="nav-link" href="#">종료 임박 전시</a>
-                    <br />
+                <nav class="nav flex-column" style="color: #68665f;">
+                    <br>
+                    <a class="nav-link" href="/" style="font-size: 30px;">오늘의 전시</a>
+                    <br>
+                    <br>
+                    <a class="nav-link active" aria-current="page" href="/show">전시 목록</a>
+                    <br>
                     <a class="nav-link" href="/login" id="login">로그인</a>
                     <a class="nav-link" href="/mypage" id="mypage">마이페이지</a>
-                    <a class="nav-link" onclick="sign_out()" href="#" id="logout">로그아웃</a
-            >
-          </nav>
-        </div>
-        <!-- 전시 목록 -->
-        <div id="contents">
-          <div class="card-columns" id="show-cards">
-            {% for show in shows %}
-            <div class="card">
-              <img
-                class="card-img-top"
-                src=" {{ show.img }} "
-                alt="Card image cap"
-              />
-              <div class="card-body">
-                <a class = "nav-link" href=" {{ show.title_fix }} "> {{ show.title }} </a>
-                    <p class="card-text nav-link">{{ show['date'] }}</p>
-                    <a class= "nav-link" href=" {{ show.location_url }} "> {{ show.location}} </a>
-                    <p></p><button onclick="wannadiaryposting({{ show.title }})" type="button" class="btn btn-light float-right">찜하기</button>
+                    <a class="nav-link" onclick='sign_out()' href="#" id="logout">로그아웃</a>
+                </nav>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    </div>
+            <!-- 전시 목록 -->
+            <div id="contents">
+                <!-- jinja -->
+                <div class="card-columns" id="show-cards">
+                    {% for show in shows %}
+                    <div class="card">
+                      <img
+                        class="card-img-top"
+                        src=" {{ show.img }} "
+                        alt="Card image cap"
+                      />
+                      <div class="card-body">
+                        <a class="nav-link" href=" {{ show.title_fix }} ">
+                          {{ show.title }}
+                        </a>
+                        <p class="card-text nav-link">{{ show['date'] }}</p>
+                        <a class="nav-link" href=" {{ show.location_url }} ">
+                          {{ show.location}}
+                        </a>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+            </div>
 
+        </div>
+    </div>
 </body>
 
 </html>
