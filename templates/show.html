@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+    <meta property="og:title" content="오늘의 전시. 오 전" />
+    <meta property="og:description" content="전시회 정보 및 기록 작성 사이트입니다." />
+    <meta property="og:image" content="{{ url_for('static', filename='logo.png') }}" />
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +13,7 @@
     <title>인기 전시</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
 
@@ -19,12 +21,10 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#reviews-box").html("");
             checking_cookie()
         });
@@ -34,7 +34,9 @@
         }
 
         function sign_out() {
-            $.removeCookie('mytoken', { path: '/' });
+            $.removeCookie('mytoken', {
+                path: '/'
+            });
             alert('로그아웃되었습니다.')
             window.location.href = "/"
         }
@@ -57,7 +59,6 @@
                 $("#logout").hide();
             }
         }
-
     </script>
 
 
@@ -66,32 +67,32 @@
             font-family: 'Noto Serif KR', serif;
             color: #68665f;
         }
-
+        
         body {
             background-color: rgb(253, 253, 252);
         }
-
+        
         .title {
             display: block;
             width: 100px;
             margin: auto;
         }
-
+        
         #wrap {
             height: 100vh;
         }
-
+        
         #header {
             text-align: center;
             padding: 20px;
             height: 10vh;
             min-height: 50px;
         }
-
+        
         #container {
             height: 90vh;
         }
-
+        
         #aside {
             float: left;
             width: 15%;
@@ -99,28 +100,28 @@
             border-right: rgb(202, 202, 202) solid 1px;
             text-decoration: none;
         }
-
+        
         #contents {
             float: left;
             width: 85%;
             height: 100%;
         }
-
+        
         .exhibits-link {
             width: 400px;
             margin: 150px auto;
             display: block;
         }
-
+        
         #contents .exhibits-link img {
             width: 400px;
             object-fit: cover;
         }
-
+        
         .nav-link {
             color: #68665f;
         }
-
+        
         .card {
             width: 20%;
             min-width: 200px;
@@ -128,7 +129,7 @@
             margin: 20px;
             padding: 0 0 20px 0;
         }
-
+        
         .card-columns {
             width: 100%;
             left: 18%;
@@ -139,8 +140,8 @@
             justify-content: space-evenly;
             align-items: baseline;
         }
-
-        .logo{
+        
+        .logo {
             width: 80%;
             margin: 0 auto 0 10px;
         }
@@ -178,29 +179,25 @@
                 <div class="card-columns" id="show-cards">
                     {% for show in shows %}
                     <div class="card">
-                      <img
-                        class="card-img-top"
-                        src=" {{ show.img }} "
-                        alt="Card image cap"
-                      />
-                      <div class="card-body">
-                        <a class="nav-link"  href=" {{ show.title_fix }} ">
+                        <img class="card-img-top" src=" {{ show.img }} " alt="Card image cap" />
+                        <div class="card-body">
+                            <a class="nav-link" href=" {{ show.title_fix }} ">
                           {{ show.title }}
                         </a>
-                        <p class="card-text nav-link">{{ show['date'] }}</p>
-                        <a class="nav-link"  href=" {{ show.location_url }} ">
+                            <p class="card-text nav-link">{{ show['date'] }}</p>
+                            <a class="nav-link" href=" {{ show.location_url }} ">
                           {{ show.location}}
                         </a>
-                      </div>
-                      <button type="button" onclick = "location.href ='{{ show.title_fix }}'"  class="btn btn-light float-right">예약하기 </button>
-                      <button type="button" onclick = "location.href ='{{ show.location_url }}'" class="btn btn-light float-right">위치보기 </button>
+                        </div>
+                        <button type="button" onclick="location.href ='{{ show.title_fix }}'" class="btn btn-light float-right">예약하기 </button>
+                        <button type="button" onclick="location.href ='{{ show.location_url }}'" class="btn btn-light float-right">위치보기 </button>
                     </div>
                     {% endfor %}
                 </div>
-                </div>
             </div>
-
         </div>
+
+    </div>
     </div>
 </body>
 
