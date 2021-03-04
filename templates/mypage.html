@@ -3,24 +3,29 @@
 
 <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-    <title>스파르타코딩클럽 | 나홀로일기장</title>
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+        
+    <title>마이페이지</title>
 
 
     <style>
@@ -115,6 +120,7 @@
             bsCustomFileInput.init()
             listing()
             wannadiarylisting()
+            checking_cookie()
         })
 
         function open_close() {
@@ -266,6 +272,31 @@
                 }
             });
         }
+
+        function checking_cookie() {
+            // checking cookie
+            var cookie = document.cookie;
+            // 로그인 상태이면 마이페이지/로그아웃 show, 로그인 hide
+            if (cookie != "") {
+                console.log("로그인상태")
+                $("#mypage").show();
+                $("#logout").show();
+                $("#login").hide();
+            }
+            //비로그인 상태이면 로그인 show, 마이페이지/로그아웃 hide
+            else {
+                console.log("로그인하세요")
+                $("#login").show();
+                $("#mypage").hide();
+                $("#logout").hide();
+            }
+        }
+
+        function sign_out() {
+            $.removeCookie('mytoken', { path: '/' });
+            alert('로그아웃되었습니다.')
+            window.location.href = "/"
+        }
     </script>
 
 </head>
@@ -288,12 +319,13 @@
                     <a class="nav-link" href="/" style="font-size: 30px;">오늘의 전시</a>
                     <br>
                     <br>
-                    <a class="nav-link active" aria-current="page" href="/show">인기 전시</a>
-                    <a class="nav-link" href="/show">전시 검색</a>
-                    <a class="nav-link" href="/show">종료 임박 전시</a>
+                    <a class="nav-link active" aria-current="page" href="#">인기 전시</a>
+                    <a class="nav-link" href="#">전시 검색</a>
+                    <a class="nav-link" href="#">종료 임박 전시</a>
                     <br>
-                    <a class="nav-link" href="/mypage">마이페이지</a>
-                    <a class="nav-link" href="#">로그아웃</a>
+                    <a class="nav-link" href="/login" id="login">로그인</a>
+                    <a class="nav-link" href="/user" id="mypage">마이페이지</a>
+                    <a class="nav-link" onclick='sign_out()' href="#" id="logout">로그아웃</a>
                 </nav>
             </div>
 
