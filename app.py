@@ -71,8 +71,16 @@ def save_diary():
     }
 
     db.diary.insert_one(doc)
-
     return jsonify({'msg': '저장 완료!'})
+
+
+@app.route('/show/wannadiary', methods=['POST'])  # 찜한 전시회 보여주기 API
+def find_wannadiary():
+     print(title_give);     
+     title_receive = request.form['title_give']      
+     wannadiaries = list(db.exhibitions.find({'title': title_receive}, {'_id': False}))
+     return jsonify({'all_wannadiary': wannadiaries})
+
 
 
 @app.route('/mypage/wannadiary', methods=['GET'])  # 찜한 전시회 보여주기 API
@@ -86,29 +94,31 @@ def show_wannadiary():
     return jsonify({'all_wannadiary': wannadiaries})
 
 
-@app.route('/show/wannadiary', methods=['POST'])  # 찜하기 저장
-def save_wannadiary():
-    title_receive = request.form['title_give']
-    content_receive = request.form['content_give']
-    img = request.form['img_give']
-    title_url = request.form['title_url_give']
+# @app.route('/show/wannadiary', methods=['POST'])  # 찜하기 저장
+# def save_wannadiary():
+#     title_receive = request.form['title_give']
+#     location_receive = request.form['location_give']
+#     date_receive = request.form['date_give']
+#     img = request.form['img_give']
+#     title_url = request.form['title_url_give']
 
-    # id와 같이 저장
-    token_receive = request.cookies.get('mytoken')
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    user_info = db.users.find_one({"username": payload["id"]})["username"]
+#     # id와 같이 저장
+#     token_receive = request.cookies.get('mytoken')
+#     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#     user_info = db.users.find_one({"username": payload["id"]})["username"]
 
-    doc = {
-        'username': user_info,
-        'title': title_receive,
-        'content': content_receive,
-        'img': img,
-        'title_url': title_url
-    }
+#     doc = {
+#         'username': user_info,
+#         'title': title_receive,
+#         'location': location_receive,
+#         'date' : date_receive,
+#         'img': img,
+#         'title_url': title_url
+#     }
 
-    db.wannadiary.insert_one(doc)
+#     db.wannadiary.insert_one(doc)
 
-    return jsonify({'msg': '저장 완료!'})
+#     return jsonify({'msg': '저장 완료!'})
 
 
 @app.route('/mypage/wannadelete', methods=['POST'])  # 찜리스트 삭제 API
