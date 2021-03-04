@@ -10,7 +10,8 @@
     <title>인기 전시</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
 
@@ -18,10 +19,12 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#reviews-box").html("");
             showReview();
             checking_cookie()
@@ -32,7 +35,7 @@
                 type: "GET",
                 url: "/info",
                 data: {},
-                success: function(response) {
+                success: function (response) {
                     let shows = response['all_info']
                     for (let i = 0; i < shows.length; i++) {
                         let title = shows[i]['title']
@@ -41,7 +44,7 @@
                         let title_fix = shows[i]['title_fix']
                         let location = shows[i]['location']
                         let location_url = shows[i]['location_url']
-                        
+
                         let temp_html = `<div class="card">
                                                 <img class="card-img-top" src="${img}" alt="Card image cap">
                                                 <div class="card-body">
@@ -93,36 +96,37 @@
             font-family: 'Noto Serif KR', serif;
             color: #68665f;
         }
+
         /* .nav-link{
             color: #68665f;
             font-size: large;
         } */
-        
+
         body {
             background-color: rgb(253, 253, 252);
         }
-        
+
         .title {
             display: block;
             width: 100px;
             margin: auto;
         }
-        
+
         #wrap {
             height: 100vh;
         }
-        
+
         #header {
             text-align: center;
             padding: 20px;
             height: 10vh;
             min-height: 50px;
         }
-        
+
         #container {
             height: 90vh;
         }
-        
+
         #aside {
             float: left;
             width: 15%;
@@ -130,36 +134,36 @@
             border-right: rgb(202, 202, 202) solid 1px;
             text-decoration: none;
         }
-        
+
         #contents {
             float: left;
             width: 85%;
             height: 100%;
         }
-        
+
         .exhibits-link {
             width: 400px;
             margin: 150px auto;
             display: block;
         }
-        
+
         #contents .exhibits-link img {
             width: 400px;
             object-fit: cover;
         }
-        
+
         .nav-link {
             color: #68665f;
         }
-        
+
         .card {
             width: 300px;
             height: 550px;
             display: inline-block;
         }
-        
+
         .card-columns {
-            width: 150vh;
+            width: 100%;
             left: 18%;
             text-align: center;
             display: flex;
@@ -196,9 +200,12 @@
                 </nav>
             </div>
             <!-- 전시 목록 -->
-            <div class="card-columns" id="show-cards">
+            <div id="contents">
+                <div class="card-columns" id="show-cards">
 
+                </div>
             </div>
+
         </div>
     </div>
 </body>
