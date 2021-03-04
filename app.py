@@ -63,7 +63,7 @@ def save_diary():
         'username':user_info,
         'title':title_receive,
         'content':content_receive,
-        'file': f'{filename}.{extension}'
+        'file': f'{filename}.{extension}'       
     }
 
     db.diary.insert_one(doc)
@@ -112,8 +112,9 @@ def delete_wannadiary():
 
 @app.route('/mypage/delete', methods=['POST']) #리뷰리스트 삭제 API
 def delete_diary():
-    title_receive = request.form['title_give']
-    db.diary.delete_one({'title': title_receive})
+    file_receive = request.form['file_give']
+    print(file_receive);
+    db.diary.delete_one({'file': file_receive})
     return jsonify({'msg': '삭제 완료!'})
 
 
