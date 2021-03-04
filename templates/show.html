@@ -145,6 +145,7 @@
         float: left;
         width: 85%;
         height: 100%;
+        text-decoration-line: none;
       }
 
       .exhibits-link {
@@ -214,14 +215,18 @@
             {% for show in shows %}
             <div class="card">
               <img
-                class="card-img-top"
+                class="card-img-top nav-link"
                 src=" {{ show.img }} "
                 alt="Card image cap"
               />
               <div class="card-body">
-                <a href=" {{ show.title_fix }} "> {{ show.title }} </a>
-                <p class="card-text">{{ show['date'] }}</p>
-                <a href=" {{ show.location_url }} "> {{ show.location}} </a>
+                <a class="nav-link" href=" {{ show.title_fix }} ">
+                  {{ show.title }}
+                </a>
+                <p class="card-text nav-link">{{ show['date'] }}</p>
+                <a class="nav-link" href=" {{ show.location_url }} ">
+                  {{ show.location}}
+                </a>
               </div>
             </div>
             {% endfor %}
