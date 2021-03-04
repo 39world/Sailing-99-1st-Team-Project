@@ -20,6 +20,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
 
     <style>
         * {
@@ -40,6 +42,10 @@
             width: 500px;
             margin-top: 20px;
             display: block;
+        }
+        
+        .cards-box {
+            display: flex;
         }
         
         .container {
@@ -100,11 +106,6 @@
             display: block;
         }
         
-        #contents .exhibits-link img {
-            width: 400px;
-            object-fit: cover;
-        }
-        
         .nav-link {
             color: #68665f;
         }
@@ -113,6 +114,7 @@
         $(document).ready(function() {
             bsCustomFileInput.init()
             listing()
+            wannadiarylisting()
         })
 
         function open_close() {
@@ -161,9 +163,7 @@
             let file = $('#file')[0].files[0]
             let form_data = new FormData()
 
-
-            console.log(form_data.append("file_give", file))
-            console.log(form_data)
+            form_data.append("file_give", file)
             form_data.append("title_give", title)
             form_data.append("content_give", content)
 
@@ -182,10 +182,76 @@
             })
         }
 
+        function wannadiaryposting() {
+            let title = $('#title').val()
+            let content = $("#content").val()
+            let img = $('#img').val()
+            let title_url = $('#title_url').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/show/wannadiary",
+                data: {
+                    'title_give': title,
+                    'content_give': content,
+                    'img_give': img,
+                    'title_url_give': title_url
+                },
+                success: function(response) {
+                    console.log(response);
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })
+        }
+
+        function wannadiarylisting() {
+            $.ajax({
+                type: "GET",
+                url: "/mypage/wannadiary",
+                data: {},
+                success: function(response) {
+                    let wannadiaries = response['all_wannadiary']
+                    for (let i = 0; i < wannadiaries.length; i++) {
+                        let title = wannadiaries[i]['title'];
+                        let content = wannadiaries[i]['content'];
+                        let img = wannadiaries[i]['img'];
+                        let title_url = wannadiaries[i]['title_url'];
+
+
+                        let temp_html = `<div class="card" >
+                                             <img class="card-img-top" onclick="goticket(${title_url})" src="${img}" id="card-img" alt="Card image cap">
+                                             <div class="card-body">
+                                             <h5 class="card-title">${title}</h5>
+                                             <p class="card-text">${content}</p>
+                                             <button onclick="delete_wannadiary(${title})" type="button" class="btn btn-light float-right">삭제하기</button>
+                                            </div>
+                                         </div>`;
+                        $('#cards-box').append(temp_html);
+
+                    }
+                }
+            })
+        }
+
         function delete_diary(title) {
             $.ajax({
                 type: 'POST',
                 url: '/mypage/delete',
+                data: {
+                    title_give: title
+                },
+                success: function(response) {
+                    alert(response['msg']);
+                    window.location.reload()
+                }
+            });
+        }
+
+        function delete_wannadiary(title) {
+            $.ajax({
+                type: 'POST',
+                url: '/mypage/wannadelete',
                 data: {
                     title_give: title
                 },
@@ -217,16 +283,15 @@
                     <a class="nav-link" href="/" style="font-size: 30px;">오늘의 전시</a>
                     <br>
                     <br>
-                    <a class="nav-link active" aria-current="page" href="#">인기 전시</a>
-                    <a class="nav-link" href="#">전시 검색</a>
-                    <a class="nav-link" href="#">종료 임박 전시</a>
+                    <a class="nav-link active" aria-current="page" href="/show">인기 전시</a>
+                    <a class="nav-link" href="/show">전시 검색</a>
+                    <a class="nav-link" href="/show">종료 임박 전시</a>
                     <br>
-                    <a class="nav-link" href="/login">로그인</a>
                     <a class="nav-link" href="/mypage">마이페이지</a>
                     <a class="nav-link" href="#">로그아웃</a>
                 </nav>
             </div>
-            <!-- 전시 목록 -->
+
             <div id="contents">
                 <div class="wrap">
                     <div class="jumbotron jumbotron-fluid">
@@ -256,9 +321,11 @@
 
                 <div class="wrap">
                     <div class="jumbotron jumbotron-fluid">
-
-                        <h1> 관심있는 전시회 </h1>
+                        <div class="container">
+                            <h1> 관심있는 전시회 </h1>
+                        </div>
                     </div>
+
                     <div class="card-columns" id="cards-box">
                         <div class="card">
                             <img class="card-img-top" src="https://movie-phinf.pstatic.net/20200915_134/1600145887443uTV3X_JPEG/movie_image.jpg?type=m427_320_2" alt="Card image cap">
