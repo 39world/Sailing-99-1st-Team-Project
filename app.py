@@ -120,8 +120,8 @@ def delete_wannadiary():
 
 @app.route('/mypage/delete', methods=['POST'])  # 리뷰리스트 삭제 API
 def delete_diary():
-    title_receive = request.form['title_give']
-    db.diary.delete_one({'title': title_receive})
+    file_receive = request.form['file_give']
+    db.diary.delete_one({'file': file_receive})
     return jsonify({'msg': '삭제 완료!'})
 
 
