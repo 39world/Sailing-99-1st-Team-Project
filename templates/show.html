@@ -126,6 +126,7 @@
             min-width: 200px;
             display: inline-block;
             margin: 20px;
+            padding: 0 0 20px 0;
         }
 
         .card-columns {
@@ -135,7 +136,6 @@
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-
             justify-content: space-evenly;
             align-items: baseline;
         }
@@ -186,9 +186,11 @@
                           {{ show.location}}
                         </a>
                       </div>
+                      <button type="button" onclick = "location.href ='{{ show.title_fix }}'"  class="btn btn-light float-right">예약하기 </button>
+                      <button type="button" onclick = "location.href ='{{ show.location_url }}'" class="btn btn-light float-right">위치보기 </button>
                     </div>
                     {% endfor %}
-                  </div>
+                </div>
                 </div>
             </div>
 
