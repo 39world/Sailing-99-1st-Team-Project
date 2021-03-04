@@ -22,8 +22,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 
     <title>마이페이지</title>
 
@@ -52,7 +51,7 @@
         .cards-box {
             display: flex;
         }
-
+        
         .container {
             padding-left: 50px;
         }
@@ -68,6 +67,11 @@
         
         body {
             background-color: rgb(253, 253, 252);
+        }
+        
+        .logo {
+            width: 80%;
+            margin: 0 auto 0 10px;
         }
         
         .title {
@@ -103,7 +107,6 @@
             float: left;
             width: 85%;
             height: 100%;
-
             overflow: auto;
         }
         
@@ -276,11 +279,6 @@
             alert('로그아웃되었습니다.')
             window.location.href = "/"
         }
-
-        .logo{
-            width: 80%;
-            margin: 0 auto 0 10px;
-        }
     </script>
 
 </head>
@@ -311,10 +309,9 @@
                     <a class="nav-link" onclick='sign_out()' href="#" id="logout">로그아웃</a>
                 </nav>
             </div>
-                
+
             <div id="contents">
                 <div class="wrap">
-                    <a href="#wishexhibit" style="color: #68665f;">관심있는 전시회 바로가기</a>
                     <div class="jumbotron jumbotron-fluid">
                         <div class="container" style="display:flex">
                             <h1 id="visitedexhibit" style="font-size: 25px">다녀온 전시회</h1>
@@ -325,70 +322,42 @@
                     <div class="card-columns" id="cards-box">
                     </div>
                 </div>
+            </div>
+        </div>
 
+        <div class="modal" id="modal-edit">
+            <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
+            <div class="modal-content">
+                <div class="box">
+                    <article class="media">
+                        <div class="media-content">
+                            <div class="field">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="file">
+                                    <label class="custom-file-label">전시회 사진 올리기</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="title" placeholder="전시회 이름">
+                                </div>
+                            </div>
 
-                <div class="wrap" style="margin-top: 15px;">
-                    <a href="#visitedexhibit" style="color: #68665f;">다녀온 전시회 바로가기</a>
-                    <div class="jumbotron jumbotron-fluid">
-                        <div class="container">
-                            <h1 id="wishexhibit" style="font-size: 25px"> 관심있는 전시회 </h1>
-                        </div>
-                    </div>
-
-                    <div class="card-columns" id="cards-box">
-                        <div class="card">
-                            <img class="card-img-top" src="https://movie-phinf.pstatic.net/20200915_134/1600145887443uTV3X_JPEG/movie_image.jpg?type=m427_320_2" alt="Card image cap">
-                            <div class="card-body">
-                                <h5 class="card-title">타이틀</h5>
-                                <p class="card-text">리뷰</p>
-                                <button type="button" class="btn btn-light float-right">삭제하기</button>
+                            <div class="field">
+                                <div class="form-group">
+                                    <textarea class="form-control" id="content" rows="3" placeholder="리뷰 내용 작성"></textarea>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <button onclick='posting()' type="button" class="btn btn-light float-right">저장하기</button>
                             </div>
                         </div>
-                    </div>
-
-
+                    </article>
                 </div>
             </div>
+            <button class="modal-close is-large" aria-label="close" onclick='$("#modal-edit").removeClass("is-active")'></button>
         </div>
 
-    <div class="modal" id="modal-edit">
-        <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
-        <div class="modal-content">
-            <div class="box">
-                <article class="media">
-                    <div class="media-content">
-                        <div class="field">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="file">
-                                <label class="custom-file-label">전시회 사진 올리기</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="title" placeholder="전시회 이름">
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="form-group">
-                                <textarea class="form-control" id="content" rows="3" placeholder="리뷰 내용 작성"></textarea>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <button onclick='posting()' type="button" class="btn btn-light float-right">저장하기</button>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-        <button class="modal-close is-large" aria-label="close" onclick='$("#modal-edit").removeClass("is-active")'></button>
-    </div>
-
-
-
-    <div class="card-columns" id="cards-box">
-
-    </div>
     </div>
 </body>
 

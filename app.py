@@ -102,6 +102,7 @@ def show_diary():
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     user_info = db.users.find_one({"username": payload["id"]})["username"]
+    print(payload['id']);
     diaries = list(db.diary.find({'username': user_info}, {'_id': False}))
 
     return jsonify({'all_diary': diaries})
